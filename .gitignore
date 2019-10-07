@@ -1,3 +1,15 @@
+# Project Specific #
+# Ignore the dataset 
+PCAPs/
+All features/
+
+# Ignore VS Code configurations
+.vscode/
+
+# Ignore images (might want to get rid of this later)
+*.png
+
+####################
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
