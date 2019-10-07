@@ -3,7 +3,6 @@ Author: Eric McCullough
 File: composite_frame 
 Trello: Goal 1 
 '''
-from pathlib import Path
 from typing import List
 
 import numpy as np
