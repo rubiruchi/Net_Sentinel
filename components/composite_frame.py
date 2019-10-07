@@ -1,3 +1,8 @@
+'''
+Author: Eric McCullough
+File: composite_frame 
+Trello: Goal 1 
+'''
 from pathlib import Path
 from typing import List
 
@@ -124,4 +129,4 @@ class Composite_Frame(object):
             index += 1
 
         return time_frames
-        
+
