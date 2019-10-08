@@ -8,7 +8,7 @@ All features/
 
 # Ignore images (might want to get rid of this later)
 *.png
-
+heat_maps/
 ####################
 # Byte-compiled / optimized / DLL files
 __pycache__/
