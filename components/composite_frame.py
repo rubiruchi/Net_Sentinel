@@ -17,12 +17,19 @@ class Composite_Frame(object):
     Dataset used: BoT IoT Dataset (10 best features CSV) 
     '''
 
-    def __init__(self, frame: pd.DataFrame, interval: int):
+    def __init__(self, frame: pd.DataFrame, interval: int, max_frames: int=-1):
         '''
         Instance variables:
             @self.items -> The list of dataframes derived from the parent frame
             @self._interval -> The time interval to split the parent frame on
+            @self.max_frames -> The maximum number of time frames to include in
+                the composite frame. Default is set to 10,000
         '''
+        if max_frames < 0:
+            self.max_frames = 10000
+        else:
+            self.max_frames = max_frames
+
         self.items: List[pd.DataFrame] = self._split_frame(frame, interval)
         self._interval = interval
 
@@ -112,6 +119,11 @@ class Composite_Frame(object):
                 # Update loop variables
                 current_frame = pd.DataFrame(current_frame)
                 time_frames.append(current_frame)
+
+                # If the upper limit of frames to add has been reached, break the loop
+                if len(time_frames) >= self.max_frames:
+                    break
+
                 current_frame = []
                 min_stime = row.stime
                 max_ltime = min_stime + interval
