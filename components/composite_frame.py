@@ -17,7 +17,7 @@ class Composite_Frame(object):
     Dataset used: BoT IoT Dataset (10 best features CSV) 
     '''
 
-    def __init__(self, frame: pd.DataFrame, interval: int, max_frames: int=-1):
+    def __init__(self, frame: pd.DataFrame, interval: int, max_frames: int = -1):
         '''
         Instance variables:
             @self.items -> The list of dataframes derived from the parent frame
@@ -94,6 +94,7 @@ class Composite_Frame(object):
     def _split_frame(self, df: pd.DataFrame, interval: int):
         # Order the data frame by start time
         traffic = df.sort_values(by=['stime']).reset_index()
+        traffic = traffic.filter(['saddr', 'stime', 'ltime', 'TnBPSrcIP'])
 
         # Variables for tracking the progress of the function
         progress = 0.
@@ -102,22 +103,24 @@ class Composite_Frame(object):
         index = 0
         time_frames = []                    # list to hold subframes
         current_frame = []                  # Current data frame being populated
-        min_stime = traffic.iloc[0].stime   # Starting point of current time frame
+        # Starting point of current time frame
+        min_stime = traffic.iloc[0].stime
         max_ltime = min_stime + interval    # ending point of current time frame
 
         # Main loop
-        while index < traffic.shape[0]:
+        while not traffic.empty:
             # Find start and end time of current flow
-            row = traffic.iloc[index]
-            current_stime, current_ltime = row.stime, row.ltime
+            current_stime, current_ltime = traffic.iloc[index].stime, traffic.iloc[index].ltime
 
             if current_stime < max_ltime:
                 traffic, current_frame = self._process_flow(current_stime, min_stime, current_ltime,
-                                                           max_ltime, current_frame, traffic, index, interval)
+                                                            max_ltime, current_frame, traffic, index, interval)
 
             else:
                 # Update loop variables
                 current_frame = pd.DataFrame(current_frame)
+                current_frame = current_frame.filter(['saddr', 'TnBPSrcIP']).groupby(
+                    'saddr').sum().reset_index()
                 time_frames.append(current_frame)
 
                 # If the upper limit of frames to add has been reached, break the loop
@@ -125,19 +128,28 @@ class Composite_Frame(object):
                     break
 
                 current_frame = []
-                min_stime = row.stime
+                min_stime = traffic.iloc[index].stime
                 max_ltime = min_stime + interval
 
                 traffic, current_frame = self._process_flow(current_stime, min_stime, current_ltime,
-                                                           max_ltime, current_frame, traffic, index, interval)
+                                                            max_ltime, current_frame, traffic, index, interval)
 
             # If sufficient progress has been made, update the user via print
             percent_done = (index+1) / traffic.shape[0]
             if percent_done - progress >= 0.05:
                 progress = percent_done
                 print('Progress: {:.2f}%'.format(percent_done * 100))
-                print(f'Traffic now has {traffic.shape[0]} items')
-            index += 1
+
+            traffic = traffic.drop(index, axis=0)
+
+            if traffic.empty:
+                continue
+            elif traffic.index.values[0] != 0:
+                traffic.index = range(len(traffic.index))
+
+        current_frame = pd.DataFrame(current_frame)
+        time_frames.append(current_frame)
+        current_frame = current_frame.filter(['saddr', 'TnBPSrcIP']).groupby(
+            'saddr').sum().reset_index()
 
         return time_frames
-
