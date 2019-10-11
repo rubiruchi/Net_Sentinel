@@ -21,7 +21,7 @@ flow *process_csv_line(string line)
     long long tbytes;
     stringstream ss(line);
     bool attack;
-    flow *newFlow = new flow; 
+    flow *newFlow = new flow;
 
     getline(ss, _, ',');           // pkSeqId
     getline(ss, sstime, ',');      // stime
@@ -70,23 +70,22 @@ flow *process_csv_line(string line)
     getline(ss, cateogry, ',');    // category
     getline(ss, subcategory, ','); // subcateogry
 
-    stime = stold(sstime); 
-    ltime = stold(sltime); 
+    stime = stold(sstime);
+    ltime = stold(sltime);
     tbytes = stoll(stbytes);
 
     newFlow->saddr = saddr;
-    newFlow->stime = stime; 
-    newFlow->ltime = ltime; 
-    newFlow->tbytes = tbytes; 
+    newFlow->stime = stime;
+    newFlow->ltime = ltime;
+    newFlow->tbytes = tbytes;
 
     return newFlow;
 }
 
-vector<flow *> read_csv(std::string fname)
+void read_csv(std::string fname, vector<flow *> &frame)
 {
     string line;
     ifstream csv(fname);
-    vector<flow *> dataframe; 
 
     // DELETE LATER
     int i = 0;
@@ -94,34 +93,41 @@ vector<flow *> read_csv(std::string fname)
     if (!csv.is_open())
         throw "ERROR on opening file";
 
-    getline(csv, line); 
+    getline(csv, line);
 
     while (getline(csv, line))
     {
         flow *newFlow = process_csv_line(line);
-        dataframe.push_back(newFlow); 
+        frame.push_back(newFlow);
 
         // DELETE LATER
-        i++; 
+        i++;
         if (i >= 5)
-            break; 
+            break;
     }
-
-    return dataframe; 
 }
 
 int main()
 {
-    string fname = "All features/UNSW_2018_IoT_Botnet_Full5pc_1.csv"; 
-    vector<flow *> frame = read_csv(fname); 
+    int fnames_len = 4; 
+    int i; 
+    string fnames[] = {
+        "All features/UNSW_2018_IoT_Botnet_Full5pc_1.csv",
+        "All features/UNSW_2018_IoT_Botnet_Full5pc_2.csv",
+        "All features/UNSW_2018_IoT_Botnet_Full5pc_3.csv",
+        "All features/UNSW_2018_IoT_Botnet_Full5pc_4.csv"};
+
+    vector<flow *> frame;
+    for (i = 0; i < fnames_len; ++i) 
+        read_csv(fnames[i], frame);
 
     int vec_len = frame.size();
-    for (int i=0; i < vec_len; ++i)
+    for (i = 0; i < vec_len; ++i)
     {
         flow *aFlow = frame.front();
-        frame.erase(frame.begin());  
+        frame.erase(frame.begin());
 
-        cout << "My Flow: " << endl;
+        cout << "Flow: " << i  << endl;
         cout << "\t" << aFlow->saddr << endl;
         cout << "\t" << aFlow->stime << endl;
         cout << "\t" << aFlow->ltime << endl;
@@ -130,5 +136,5 @@ int main()
         delete aFlow;
     }
 
-    return 0; 
+    return 0;
 }
