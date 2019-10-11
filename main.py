@@ -1,12 +1,12 @@
 import sys
-sys.path.append('./components')
+sys.path.append('./components/python')
 from pathlib import Path
 
 import pandas as pd
 import numpy as np
 
-from components.composite_frame import Composite_Frame
-from components.image_factory import Image_Factory
+from components.python.composite_frame import Composite_Frame
+from components.python.image_factory import Image_Factory
 
 
 def get_frame():
