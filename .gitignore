@@ -9,6 +9,10 @@ All features/
 # Ignore images (might want to get rid of this later)
 *.png
 heat_maps/
+
+# Ignore Mac OS specific files
+.DS_Store
+
 ####################
 
 # C/C++ object files / executables
