@@ -10,6 +10,11 @@ All features/
 *.png
 heat_maps/
 ####################
+
+# C/C++ object files / executables
+*.o
+*.app
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
