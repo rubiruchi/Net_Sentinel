@@ -32,6 +32,8 @@ flow *process_csv_line(string line);
 void read_csv(string fname, vector<flow *> &frame);
 void processFrame(vector<flow *> &frame);
 bool compareFlows(flow *f1, flow *f2);
+void processFlow(string &row, vector<flow *> &frame);
+void writeFrame(vector<string> &subFrame);
 
 int main()
 {
@@ -52,7 +54,7 @@ int main()
     time(&end_read);
 
     time(&start_iter);
-    processFrame(frame);
+    processFrame(frame, 60);
     time(&end_iter);
 
     // DEBUG remove later
@@ -181,17 +183,44 @@ flow *process_csv_line(string line)
  * Dependents
  * ----------
  * main
+ * 
+ * Dependencies 
+ * ------------
+ * compareFlows
+ * processFlow
 */
-void processFrame(vector<flow *> &frame)
+void processFrame(vector<flow *> &frame, int interval)
 {
+    // Sort flows by starting time
     sort(frame.begin(), frame.end(), compareFlows);
+
+    // Loop variables
     vector<string> current_frame;
+    long double min_stime = frame[0]->stime;
+    long double max_ltime = min_stime + interval;
 
     for (int i = 0; i < frame.size(); ++i)
     {
         string row;
-        cout << frame[i]->stime << endl;
+        long double current_stime = frame[i]->stime;
+        long double current_ltime = frame[i]->ltime; 
+        // Flow starts in current frame and should be processed 
+        if (current_stime < max_ltime) 
+        {
+            processFlow(row, frame);
+        } 
         
+        // Flow starts after current frame and we should reset our loop variables
+        else 
+        {
+            // Write current frame to storage 
+            writeFrame(current_frame);
+            // Clear out current frame
+            current_frame.clear();
+            min_stime = frame[i]->stime;
+            max_ltime = min_stime + interval; 
+            processFlow(row, frame);
+        }        
         delete frame[i];
     }
 }
@@ -207,3 +236,24 @@ void processFrame(vector<flow *> &frame)
  * processFrame
 */
 bool compareFlows(flow *f1, flow *f2){ return (f1->stime < f1->stime); }
+
+/*
+ * Process Flow Function
+ * 
+ * This function takes a flow and populates a row string with the appropriate 
+ * information. Additionally, it will handle splitting flows if they span past the 
+ * current acceptable frame. 
+ * 
+ * Dependents
+ * ----------
+ * processFrame
+*/
+void processFlow(string &row, vector<flow *> &frame) 
+{
+    /*TODO*/
+}
+
+void writeFrame(vector<string> &subFrame)
+{
+    /*TODO*/
+}
