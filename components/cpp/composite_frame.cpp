@@ -4,6 +4,8 @@
 #include <vector>
 #include <sstream>
 
+#include <ctime> 
+
 using namespace std;
 
 /*
@@ -29,9 +31,14 @@ struct flow
 flow *process_csv_line(string line);
 void read_csv(string fname, vector<flow *> &frame);
 void processFrame(vector<flow *> &frame);
+bool compareFlows(flow *f1, flow *f2);
 
 int main()
 {
+    // Debugging remove later
+    time_t start_read, end_read, start_iter, end_iter;
+    double dur1, dur2;
+
     string fnames[] = {
         "All features/UNSW_2018_IoT_Botnet_Full5pc_1.csv",
         "All features/UNSW_2018_IoT_Botnet_Full5pc_2.csv",
@@ -39,10 +46,22 @@ int main()
         "All features/UNSW_2018_IoT_Botnet_Full5pc_4.csv"};
     vector<flow *> frame;
     
+    time(&start_read);
     for (string fname : fnames) 
         read_csv(fname, frame);
+    time(&end_read);
 
+    time(&start_iter);
     processFrame(frame);
+    time(&end_iter);
+
+    // DEBUG remove later
+    dur1 = difftime(end_read, start_read);
+    dur2 = difftime(end_iter, start_iter);
+
+    cout << "Time to read: " << dur1 << endl; 
+    cout << "Time to iterate: " << dur2 << endl;
+
     return 0;
 }
 
@@ -165,13 +184,26 @@ flow *process_csv_line(string line)
 */
 void processFrame(vector<flow *> &frame)
 {
-    int i = 0;
+    sort(frame.begin(), frame.end(), compareFlows);
     vector<string> current_frame;
 
-    for (flow *f : frame)
+    for (int i = 0; i < frame.size(); ++i)
     {
         string row;
-        /*TODO: add code for iterating that works as the vector grows*/
-        delete f;
+        cout << frame[i]->stime << endl;
+        
+        delete frame[i];
     }
 }
+
+/*
+ * Compare flow function 
+ * 
+ * This function is a helper function for the vector.sort method and allows it to 
+ * sort a vector of pointers to flows 
+ * 
+ * Dependents
+ * ----------
+ * processFrame
+*/
+bool compareFlows(flow *f1, flow *f2){ return (f1->stime < f1->stime); }
