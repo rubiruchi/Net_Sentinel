@@ -8,7 +8,7 @@
 
 using namespace std;
 
-/*
+/*******************************************************************************
  * Network Flow Struct
  * 
  * This struct contains the variables representing a single network flow 
@@ -19,7 +19,7 @@ using namespace std;
  * stime    long double                      Starting time network flow
  * ltime    long double                      Ending time of network flow
  * tbytes   long long                        Total number of bytes sent during flow
-*/
+*******************************************************************************/
 struct flow
 {
     string saddr;
@@ -67,7 +67,7 @@ int main()
     return 0;
 }
 
-/*
+/*******************************************************************************
  * Read CSV Function
  * 
  * This function opens the CSVs provided in the BoT IoT Dataset and extracts the
@@ -80,7 +80,7 @@ int main()
  * Function Dependencies 
  * ---------------------
  * process_csv_line
-*/
+*******************************************************************************/
 void read_csv(string fname, vector<flow *> &frame)
 {
     string line;
@@ -98,14 +98,14 @@ void read_csv(string fname, vector<flow *> &frame)
     }
 }
 
-/*
+/*******************************************************************************
  * Process CSV Line Function 
  * 
  * Function Dependents 
  * -------------------
  * read_csv
  * main
-*/
+*******************************************************************************/
 flow *process_csv_line(string line)
 {
     long double stime, ltime;
@@ -174,7 +174,7 @@ flow *process_csv_line(string line)
     return newFlow;
 }
 
-/*
+/*******************************************************************************
  * Process Frame Function
  * 
  * This function takes a vector of network flows, and processes them into input
@@ -188,7 +188,7 @@ flow *process_csv_line(string line)
  * ------------
  * compareFlows
  * processFlow
-*/
+*******************************************************************************/
 void processFrame(vector<flow *> &frame, int interval)
 {
     // Sort flows by starting time
@@ -225,7 +225,7 @@ void processFrame(vector<flow *> &frame, int interval)
     }
 }
 
-/*
+/*******************************************************************************
  * Compare flow function 
  * 
  * This function is a helper function for the vector.sort method and allows it to 
@@ -234,10 +234,10 @@ void processFrame(vector<flow *> &frame, int interval)
  * Dependents
  * ----------
  * processFrame
-*/
+*******************************************************************************/
 bool compareFlows(flow *f1, flow *f2){ return (f1->stime < f1->stime); }
 
-/*
+/*******************************************************************************
  * Process Flow Function
  * 
  * This function takes a flow and populates a row string with the appropriate 
@@ -247,12 +247,22 @@ bool compareFlows(flow *f1, flow *f2){ return (f1->stime < f1->stime); }
  * Dependents
  * ----------
  * processFrame
-*/
+*******************************************************************************/
 void processFlow(string &row, vector<flow *> &frame) 
 {
     /*TODO*/
 }
 
+/*******************************************************************************
+ * Write Frame Function
+ * 
+ * This function takes a subframe representing the network activity in a given 
+ * time interval and writes it to an external storage system (either sql or csv)
+ * 
+ * Dependents
+ * ----------
+ * processFrame
+*******************************************************************************/
 void writeFrame(vector<string> &subFrame)
 {
     /*TODO*/
