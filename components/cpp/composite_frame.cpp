@@ -33,8 +33,8 @@ flow *process_csv_line(string line);
 void read_csv(string fname, vector<flow *> &frame);
 void processFrame(vector<flow *> &frame, int interval);
 bool compareFlows(flow *f1, flow *f2);
-void processFlow(string &row, vector<flow *> &frame, int index, const long double min_stime, const long double max_ltime);
-void splitFlow(string &row, vector<flow *> &frame, int index, const long double min_stime, const long double max_ltime);
+void processFlow(string &row, vector<flow *> &frame, int index, const long double &min_stime, const long double &max_ltime, const int &interval);
+void splitFlow(string &row, vector<flow *> &frame, int index, const long double &min_stime, const long double &max_ltime, const int &interval);
 void writeFrame(vector<string> &subFrame);
 
 int main()
@@ -210,7 +210,7 @@ void processFrame(vector<flow *> &frame, int interval)
         // Flow starts in current frame and should be processed
         if (current_stime < max_ltime)
         {
-            processFlow(row, frame, i, current_stime, current_ltime);
+            processFlow(row, frame, i, current_stime, current_ltime, interval);
         }
 
         // Flow starts after current frame and we should reset our loop variables
@@ -222,7 +222,7 @@ void processFrame(vector<flow *> &frame, int interval)
             current_frame.clear();
             min_stime = frame[i]->stime;
             max_ltime = min_stime + interval;
-            processFlow(row, frame, i, current_stime, current_ltime);
+            processFlow(row, frame, i, current_stime, current_ltime, interval);
         }
         delete frame[i];
     }
@@ -252,7 +252,8 @@ bool compareFlows(flow *f1, flow *f2) { return (f1->stime < f1->stime); }
  * ----------
  * processFrame
 *******************************************************************************/
-void processFlow(string &row, vector<flow *> &frame, int index, const long double min_stime, const long double max_ltime)
+void processFlow(string &row, vector<flow *> &frame, int index,
+                 const long double &min_stime, const long double &max_ltime, const int &interval)
 {
     if (frame[index]->stime >= min_stime && frame[index]->ltime < max_ltime)
     {
@@ -262,12 +263,13 @@ void processFlow(string &row, vector<flow *> &frame, int index, const long doubl
               to_string(frame[index]->tbytes + '\n');
     }
     else if (frame[index]->stime >= min_stime && frame[index]->stime < max_ltime && frame[index]->ltime >= max_ltime)
-        splitFlow(row, frame, index, min_stime, max_ltime);
+        splitFlow(row, frame, index, min_stime, max_ltime, interval);
 
     return;
 }
 
-void splitFlow(string &row, vector<flow *> &frame, int index, const long double min_stime, const long double max_ltime)
+void splitFlow(string &row, vector<flow *> &frame, int index,
+               const long double &min_stime, const long double &max_ltime, const int &interval)
 {
     /*TODO*/
     return;
