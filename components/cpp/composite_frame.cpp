@@ -35,6 +35,7 @@ void processFrame(vector<flow *> &frame, int interval);
 bool compareFlows(flow *f1, flow *f2);
 void processFlow(string &row, vector<flow *> &frame, int index, const long double &min_stime, const long double &max_ltime, const int &interval);
 void splitFlow(string &row, vector<flow *> &frame, int index, const long double &min_stime, const long double &max_ltime, const int &interval);
+vector<flow *>::iterator findFlow(vector<flow *> &list, const int &key);
 void writeFrame(vector<string> &subFrame);
 
 int main()
@@ -282,12 +283,38 @@ void processFlow(string &row, vector<flow *> &frame, int index,
  * Function Dependents
  * -------------------
  * processFlow
+ * 
+ * Function Dependencies 
+ * ---------------------
+ * findFlow
 */
 void splitFlow(string &row, vector<flow *> &frame, int index,
                const long double &min_stime, const long double &max_ltime, const int &interval)
 {
     /*TODO*/
     return;
+}
+
+/*
+ * Find Function 
+ * 
+ * This function finds the first instance of an object in the frame that has a
+ * starting time greater than or equal to the target and returns an iterator object
+ * so that splitFlow can insert the resulting flow at the correct place in the list. 
+ * 
+ * Function Dependents
+ * -------------------
+ * splitFlow
+*/
+vector<flow *>::iterator findFlow(vector<flow *> &list, const int &key)
+{
+    /*TODO test this*/
+    vector<flow *>::iterator it = list.begin();
+    for(it; it < list.end(); it++) {
+        if ((*it)->stime >= key) return it; 
+    }
+
+    return list.end();
 }
 
 /*******************************************************************************
