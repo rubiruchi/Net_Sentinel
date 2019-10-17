@@ -251,6 +251,10 @@ bool compareFlows(flow *f1, flow *f2) { return (f1->stime < f1->stime); }
  * Dependents
  * ----------
  * processFrame
+ * 
+ * Dependencies
+ * ------------
+ * splitFlow 
 *******************************************************************************/
 void processFlow(string &row, vector<flow *> &frame, int index,
                  const long double &min_stime, const long double &max_ltime, const int &interval)
@@ -268,6 +272,17 @@ void processFlow(string &row, vector<flow *> &frame, int index,
     return;
 }
 
+/*
+ * Split Flow Function
+ * 
+ * This function takes a network flow that extends past the current time interval
+ * and split it, giving a percentage of its bytes to the current window and 
+ * inserting a new flow at the appropriate place in the vector 
+ * 
+ * Function Dependents
+ * -------------------
+ * processFlow
+*/
 void splitFlow(string &row, vector<flow *> &frame, int index,
                const long double &min_stime, const long double &max_ltime, const int &interval)
 {
