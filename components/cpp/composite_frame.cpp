@@ -40,9 +40,10 @@ void writeFrame(vector<string> &subFrame);
 
 int main()
 {
-    // Debugging remove later
+    // DEBUG remove later
     time_t start_read, end_read, start_iter, end_iter;
     double dur1, dur2;
+    // END debug
 
     string fnames[] = {
         "All features/UNSW_2018_IoT_Botnet_Full5pc_1.csv",
@@ -51,20 +52,32 @@ int main()
         "All features/UNSW_2018_IoT_Botnet_Full5pc_4.csv"};
     vector<flow *> frame;
 
+    // DEBUG remove later
     time(&start_read);
+    // END debug
+
     for (string fname : fnames)
         read_csv(fname, frame);
+
+    // DEBUG remove later
     time(&end_read);
+    // END debug
 
+    // DDEBUG remove later
     time(&start_iter);
-    processFrame(frame, 60);
-    time(&end_iter);
+    // END debug
 
+    processFrame(frame, 60);
+
+    // DDEBUG remove later
+    time(&end_iter);
+    // END debug
 
 
     // DEBUG remove later
     dur1 = difftime(end_read, start_read);
     dur2 = difftime(end_iter, start_iter);
+    // END debug
 
     cout << "Time to read: " << dur1 << endl;
     cout << "Time to iterate: " << dur2 << endl;
@@ -172,6 +185,7 @@ flow *process_csv_line(string line)
     ltime = stold(sltime);
     tbytes = stoll(stbytes);
     attack = true ? sattack == "1" : false;
+    /*TODO: add filtering*/
 
     newFlow->saddr = saddr;
     newFlow->stime = stime;
@@ -276,7 +290,7 @@ void processFlow(string &row, vector<flow *> &frame, size_t index,
     return;
 }
 
-/*
+/*******************************************************************************
  * Split Flow Function
  * 
  * This function takes a network flow that extends past the current time interval
@@ -290,7 +304,7 @@ void processFlow(string &row, vector<flow *> &frame, size_t index,
  * Function Dependencies 
  * ---------------------
  * findFlow
-*/
+*******************************************************************************/
 void splitFlow(string &row, vector<flow *> &frame, size_t index,
                const long double &min_stime, const long double &max_ltime, const int &interval)
 {
@@ -298,7 +312,7 @@ void splitFlow(string &row, vector<flow *> &frame, size_t index,
     return;
 }
 
-/*
+/*******************************************************************************
  * Find Function 
  * 
  * This function finds the first instance of an object in the frame that has a
@@ -308,10 +322,9 @@ void splitFlow(string &row, vector<flow *> &frame, size_t index,
  * Function Dependents
  * -------------------
  * splitFlow
-*/
+*******************************************************************************/
 vector<flow *>::iterator findFlow(vector<flow *> &list, const long double &key)
 {
-    /*TODO test this*/
     for(vector<flow *>::iterator it = list.begin(); it < list.end(); it++) 
     {
         if ((*it)->stime >= key) return it; 
