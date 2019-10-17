@@ -33,9 +33,9 @@ flow *process_csv_line(string line);
 void read_csv(string fname, vector<flow *> &frame);
 void processFrame(vector<flow *> &frame, int interval);
 bool compareFlows(flow *f1, flow *f2);
-void processFlow(string &row, vector<flow *> &frame, int index, const long double &min_stime, const long double &max_ltime, const int &interval);
-void splitFlow(string &row, vector<flow *> &frame, int index, const long double &min_stime, const long double &max_ltime, const int &interval);
-vector<flow *>::iterator findFlow(vector<flow *> &list, const int &key);
+void processFlow(string &row, vector<flow *> &frame, size_t index, const long double &min_stime, const long double &max_ltime, const int &interval);
+void splitFlow(string &row, vector<flow *> &frame, size_t index, const long double &min_stime, const long double &max_ltime, const int &interval);
+vector<flow *>::iterator findFlow(vector<flow *> &list, const long double &key);
 void writeFrame(vector<string> &subFrame);
 
 int main()
@@ -59,6 +59,8 @@ int main()
     time(&start_iter);
     processFrame(frame, 60);
     time(&end_iter);
+
+
 
     // DEBUG remove later
     dur1 = difftime(end_read, start_read);
@@ -169,6 +171,7 @@ flow *process_csv_line(string line)
     stime = stold(sstime);
     ltime = stold(sltime);
     tbytes = stoll(stbytes);
+    attack = true ? sattack == "1" : false;
 
     newFlow->saddr = saddr;
     newFlow->stime = stime;
@@ -203,7 +206,7 @@ void processFrame(vector<flow *> &frame, int interval)
     long double min_stime = frame[0]->stime;
     long double max_ltime = min_stime + interval;
 
-    for (int i = 0; i < frame.size(); ++i)
+    for (size_t i = 0; i < frame.size(); ++i)
     {
         string row;
         long double current_stime = frame[i]->stime;
@@ -240,7 +243,7 @@ void processFrame(vector<flow *> &frame, int interval)
  * ----------
  * processFrame
 *******************************************************************************/
-bool compareFlows(flow *f1, flow *f2) { return (f1->stime < f1->stime); }
+bool compareFlows(flow *f1, flow *f2) { return (f1->stime < f2->stime); }
 
 /*******************************************************************************
  * Process Flow Function
@@ -257,7 +260,7 @@ bool compareFlows(flow *f1, flow *f2) { return (f1->stime < f1->stime); }
  * ------------
  * splitFlow 
 *******************************************************************************/
-void processFlow(string &row, vector<flow *> &frame, int index,
+void processFlow(string &row, vector<flow *> &frame, size_t index,
                  const long double &min_stime, const long double &max_ltime, const int &interval)
 {
     if (frame[index]->stime >= min_stime && frame[index]->ltime < max_ltime)
@@ -288,7 +291,7 @@ void processFlow(string &row, vector<flow *> &frame, int index,
  * ---------------------
  * findFlow
 */
-void splitFlow(string &row, vector<flow *> &frame, int index,
+void splitFlow(string &row, vector<flow *> &frame, size_t index,
                const long double &min_stime, const long double &max_ltime, const int &interval)
 {
     /*TODO*/
@@ -306,11 +309,11 @@ void splitFlow(string &row, vector<flow *> &frame, int index,
  * -------------------
  * splitFlow
 */
-vector<flow *>::iterator findFlow(vector<flow *> &list, const int &key)
+vector<flow *>::iterator findFlow(vector<flow *> &list, const long double &key)
 {
     /*TODO test this*/
-    vector<flow *>::iterator it = list.begin();
-    for(it; it < list.end(); it++) {
+    for(vector<flow *>::iterator it = list.begin(); it < list.end(); it++) 
+    {
         if ((*it)->stime >= key) return it; 
     }
 
