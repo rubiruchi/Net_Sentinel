@@ -33,13 +33,17 @@ flow *process_csv_line(string line);
 void read_csv(string fname, vector<flow *> &frame);
 void processFrame(vector<flow *> &frame, int interval);
 bool compareFlows(flow *f1, flow *f2);
-void processFlow(string &row, vector<flow *> &frame, size_t index, const long double &min_stime, const long double &max_ltime, const int &interval);
-void splitFlow(string &row, vector<flow *> &frame, size_t index, const long double &min_stime, const long double &max_ltime, const int &interval);
+void processFlow(string &row, vector<flow *> &frame, size_t index, const long double &min_stime, const long double &max_ltime);
+void splitFlow(vector<flow *> &frame, size_t index, const long double &max_ltime);
 vector<flow *>::iterator findFlow(vector<flow *> &list, const long double &key);
 void writeFrame(vector<string> &subFrame);
 
 int main()
 {
+    /* TODO modify the following variables to specify parameters for the module*/
+    const int interval = 60;
+    /* END TODO */
+
     // DEBUG remove later
     time_t start_read, end_read, start_iter, end_iter;
     double dur1, dur2;
@@ -60,6 +64,7 @@ int main()
         read_csv(fname, frame);
 
     // DEBUG remove later
+    cout << "SIZE BEFORE PROCESSING: " << frame.size() << endl;
     time(&end_read);
     // END debug
 
@@ -67,9 +72,10 @@ int main()
     time(&start_iter);
     // END debug
 
-    processFrame(frame, 60);
+    processFrame(frame, interval);
 
     // DDEBUG remove later
+    cout << "SIZE AFTER PROCESSING: " << frame.size() << endl;
     time(&end_iter);
     // END debug
 
@@ -228,7 +234,7 @@ void processFrame(vector<flow *> &frame, int interval)
         // Flow starts in current frame and should be processed
         if (current_stime < max_ltime)
         {
-            processFlow(row, frame, i, current_stime, current_ltime, interval);
+            processFlow(row, frame, i, current_stime, current_ltime);
         }
 
         // Flow starts after current frame and we should reset our loop variables
@@ -240,7 +246,7 @@ void processFrame(vector<flow *> &frame, int interval)
             current_frame.clear();
             min_stime = frame[i]->stime;
             max_ltime = min_stime + interval;
-            processFlow(row, frame, i, current_stime, current_ltime, interval);
+            processFlow(row, frame, i, current_stime, current_ltime);
         }
         delete frame[i];
     }
@@ -263,8 +269,8 @@ bool compareFlows(flow *f1, flow *f2) { return (f1->stime < f2->stime); }
  * Process Flow Function
  * 
  * This function takes a flow and populates a row string with the appropriate 
- * information. Additionally, it will handle splitting flows if they span past the 
- * current acceptable frame. 
+ * information. Additionally, it will handle splitting flows if they span past 
+ * the current acceptable frame. 
  * 
  * Dependents
  * ----------
@@ -275,7 +281,7 @@ bool compareFlows(flow *f1, flow *f2) { return (f1->stime < f2->stime); }
  * splitFlow 
 *******************************************************************************/
 void processFlow(string &row, vector<flow *> &frame, size_t index,
-                 const long double &min_stime, const long double &max_ltime, const int &interval)
+                 const long double &min_stime, const long double &max_ltime)
 {
     if (frame[index]->stime >= min_stime && frame[index]->ltime < max_ltime)
     {
@@ -285,7 +291,13 @@ void processFlow(string &row, vector<flow *> &frame, size_t index,
               to_string(frame[index]->tbytes + '\n');
     }
     else if (frame[index]->stime >= min_stime && frame[index]->stime < max_ltime && frame[index]->ltime >= max_ltime)
-        splitFlow(row, frame, index, min_stime, max_ltime, interval);
+    {
+        splitFlow(frame, index, max_ltime);
+        row = frame[index]->saddr;
+        row = row + ',' + to_string(frame[index]->stime) + ',' +
+              to_string(frame[index]->ltime) + ',' +
+              to_string(frame[index]->tbytes + '\n');
+    }
 
     return;
 }
@@ -305,10 +317,24 @@ void processFlow(string &row, vector<flow *> &frame, size_t index,
  * ---------------------
  * findFlow
 *******************************************************************************/
-void splitFlow(string &row, vector<flow *> &frame, size_t index,
-               const long double &min_stime, const long double &max_ltime, const int &interval)
+void splitFlow(vector<flow *> &frame, size_t index, const long double &max_ltime)
 {
-    /*TODO*/
+    vector<flow *>::iterator insert_loc = findFlow(frame, max_ltime);
+
+    long double percent_in_frame = (max_ltime - frame[index]->stime) /
+                                   (frame[index]->ltime - frame[index]->stime);
+
+    flow *newFlow = new flow;
+    newFlow->saddr = frame[index]->saddr; 
+    newFlow->stime = max_ltime;
+    newFlow->ltime = frame[index]->ltime; 
+    newFlow->tbytes = frame[index]->tbytes * (1 - percent_in_frame);
+
+    frame[index]->ltime = max_ltime;
+    frame[index]->tbytes = frame[index]->tbytes * percent_in_frame; 
+
+    frame.insert(insert_loc, newFlow);
+
     return;
 }
 
