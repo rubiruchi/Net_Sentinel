@@ -1,9 +1,15 @@
+/*
+ * Author: Eric McCullough
+ * File Data Transformation Module
+ * Trello: Goal 1
+*/
 #include <iostream>
 #include <fstream>
 #include <string>
 #include <vector>
 #include <sstream>
 #include <algorithm>
+#include <fstream> 
 
 #include <ctime>
 
@@ -35,14 +41,13 @@ void processFrame(vector<flow *> &frame, int interval);
 bool compareFlows(flow *f1, flow *f2);
 void processFlow(string &row, vector<flow *> &frame, size_t index, const long double &min_stime, const long double &max_ltime);
 void splitFlow(vector<flow *> &frame, size_t index, const long double &max_ltime);
-vector<flow *>::iterator findFlow(vector<flow *> &list, const long double &key);
+vector<flow *>::iterator findFlow(vector<flow *> &list, const long double &key, size_t index);
 void writeFrame(vector<string> &subFrame);
 
 int main()
 {
-    /* TODO modify the following variables to specify parameters for the module*/
+    /* TODO: modify this variable to change the time interval in seconds */
     const int interval = 60;
-    /* END TODO */
 
     // DEBUG remove later
     time_t start_read, end_read, start_iter, end_iter;
@@ -75,7 +80,7 @@ int main()
     processFrame(frame, interval);
 
     // DDEBUG remove later
-    cout << "SIZE AFTER PROCESSING: " << frame.size() << endl;
+    cout << "\nSIZE AFTER PROCESSING: " << frame.size() << endl;
     time(&end_iter);
     // END debug
 
@@ -118,7 +123,7 @@ void read_csv(string fname, vector<flow *> &frame)
     while (getline(csv, line))
     {
         flow *newFlow = process_csv_line(line);
-        frame.push_back(newFlow);
+        if (newFlow != nullptr) frame.push_back(newFlow);
     }
     return;
 }
@@ -134,7 +139,7 @@ void read_csv(string fname, vector<flow *> &frame)
 flow *process_csv_line(string line)
 {
     long double stime, ltime;
-    string _, sstime, sltime, saddr, stbytes, proto, cateogry, subcategory, sattack;
+    string _, sstime, sltime, saddr, stbytes, proto, category, subcategory, sattack;
     long long tbytes;
     stringstream ss(line);
     bool attack;
@@ -184,21 +189,25 @@ flow *process_csv_line(string line)
     getline(ss, _, ',');           // Pkts_P_State_P_Protocol_P_DestIP
     getline(ss, _, ',');           // Pkts_P_State_P_Prrotocol_P_SrcIP
     getline(ss, sattack, ',');     // attack
-    getline(ss, cateogry, ',');    // category
+    getline(ss, category, ',');    // category
     getline(ss, subcategory, ','); // subcateogry
 
     stime = stold(sstime);
     ltime = stold(sltime);
     tbytes = stoll(stbytes);
     attack = true ? sattack == "1" : false;
-    /*TODO: add filtering*/
 
-    newFlow->saddr = saddr;
-    newFlow->stime = stime;
-    newFlow->ltime = ltime;
-    newFlow->tbytes = tbytes;
+    // TODO: specify appropriate filters 
+    if (!(attack) && proto == "tcp") // if the traffic is not an attack and uses the tcp protocol
+    {
+        newFlow->saddr = saddr;
+        newFlow->stime = stime;
+        newFlow->ltime = ltime;
+        newFlow->tbytes = tbytes;
 
-    return newFlow;
+        return newFlow;
+    }
+    else return nullptr;  
 }
 
 /*******************************************************************************
@@ -231,11 +240,14 @@ void processFrame(vector<flow *> &frame, int interval)
         string row;
         long double current_stime = frame[i]->stime;
         long double current_ltime = frame[i]->ltime;
+        // if (i % 100 == 0) cout << "\r" << i << "/" << frame.size();  
         // Flow starts in current frame and should be processed
         if (current_stime < max_ltime)
         {
-            processFlow(row, frame, i, current_stime, current_ltime);
+            processFlow(row, frame, i, current_stime, max_ltime);
+            current_frame.push_back(row);
         }
+        
 
         // Flow starts after current frame and we should reset our loop variables
         else
@@ -246,7 +258,8 @@ void processFrame(vector<flow *> &frame, int interval)
             current_frame.clear();
             min_stime = frame[i]->stime;
             max_ltime = min_stime + interval;
-            processFlow(row, frame, i, current_stime, current_ltime);
+            processFlow(row, frame, i, current_stime, max_ltime);
+            current_frame.push_back(row);
         }
         delete frame[i];
     }
@@ -288,7 +301,8 @@ void processFlow(string &row, vector<flow *> &frame, size_t index,
         row = frame[index]->saddr;
         row = row + ',' + to_string(frame[index]->stime) + ',' +
               to_string(frame[index]->ltime) + ',' +
-              to_string(frame[index]->tbytes + '\n');
+              to_string(frame[index]->tbytes) + 
+              '\n';
     }
     else if (frame[index]->stime >= min_stime && frame[index]->stime < max_ltime && frame[index]->ltime >= max_ltime)
     {
@@ -296,7 +310,7 @@ void processFlow(string &row, vector<flow *> &frame, size_t index,
         row = frame[index]->saddr;
         row = row + ',' + to_string(frame[index]->stime) + ',' +
               to_string(frame[index]->ltime) + ',' +
-              to_string(frame[index]->tbytes + '\n');
+              to_string(frame[index]->tbytes) + '\n';
     }
 
     return;
@@ -319,7 +333,7 @@ void processFlow(string &row, vector<flow *> &frame, size_t index,
 *******************************************************************************/
 void splitFlow(vector<flow *> &frame, size_t index, const long double &max_ltime)
 {
-    vector<flow *>::iterator insert_loc = findFlow(frame, max_ltime);
+    vector<flow *>::iterator insert_loc = findFlow(frame, max_ltime, index);
 
     long double percent_in_frame = (max_ltime - frame[index]->stime) /
                                    (frame[index]->ltime - frame[index]->stime);
@@ -349,9 +363,9 @@ void splitFlow(vector<flow *> &frame, size_t index, const long double &max_ltime
  * -------------------
  * splitFlow
 *******************************************************************************/
-vector<flow *>::iterator findFlow(vector<flow *> &list, const long double &key)
+vector<flow *>::iterator findFlow(vector<flow *> &list, const long double &key, size_t index)
 {
-    for(vector<flow *>::iterator it = list.begin(); it < list.end(); it++) 
+    for(vector<flow *>::iterator it = list.begin() + index; it < list.end(); it++) 
     {
         if ((*it)->stime >= key) return it; 
     }
@@ -371,6 +385,16 @@ vector<flow *>::iterator findFlow(vector<flow *> &list, const long double &key)
 *******************************************************************************/
 void writeFrame(vector<string> &subFrame)
 {
-    /*TODO*/
+    static int num_calls = 0;
+    num_calls++; 
+
+    /* TODO: edit this line to change what directory the system writes to */
+    string fname = "heat_maps/transformed_data/clean_tcp/Frame" + to_string(num_calls) + ".csv"; 
+
+    ofstream fout = ofstream(fname, std::ofstream::out); 
+    for (string str : subFrame) 
+    {
+        fout << str; 
+    }
     return;
 }
