@@ -199,6 +199,7 @@ flow *process_csv_line(string line)
 
     /* TODO: specify appropriate filters */
     if (attack && category == "DDoS" && subcategory == "TCP") // if the traffic is a TCP DDoS
+    // if (!(attack) && proto == "tcp") // if the traffic is clean tcp traffic
     {
         newFlow->saddr = saddr;
         newFlow->stime = stime;
@@ -396,6 +397,7 @@ void writeFrame(vector<string> &subFrame)
     string fname = "heat_maps/transformed_data/ddos_tcp/Frame" + to_string(num_calls) + ".csv"; 
 
     ofstream fout = ofstream(fname, std::ofstream::out); 
+    fout << "saddr,stime,ltime,tbytes\n"; 
     for (string str : subFrame) 
     {
         fout << str; 
