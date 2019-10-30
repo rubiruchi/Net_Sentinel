@@ -55,10 +55,8 @@ int main()
     // END debug
 
     string fnames[] = {
-        "All features/UNSW_2018_IoT_Botnet_Full5pc_1.csv",
-        "All features/UNSW_2018_IoT_Botnet_Full5pc_2.csv",
-        "All features/UNSW_2018_IoT_Botnet_Full5pc_3.csv",
-        "All features/UNSW_2018_IoT_Botnet_Full5pc_4.csv"};
+        "All features/UNSW_2018_IoT_Botnet_Dataset_2.csv"
+        };
     vector<flow *> frame;
 
     // DEBUG remove later
@@ -148,9 +146,9 @@ flow *process_csv_line(string line)
     getline(ss, _, ',');           // pkSeqId
     getline(ss, sstime, ',');      // stime
     getline(ss, _, ',');           // flgs
-    getline(ss, _, ',');           // flgs_number
+    // getline(ss, _, ',');           // flgs_number
     getline(ss, proto, ',');       // proto
-    getline(ss, _, ',');           // proto_number
+    // getline(ss, _, ',');           // proto_number
     getline(ss, saddr, ',');       // saddr
     getline(ss, _, ',');           // sport
     getline(ss, _, ',');           // daddr
@@ -158,7 +156,7 @@ flow *process_csv_line(string line)
     getline(ss, _, ',');           // pkts
     getline(ss, _, ',');           // bytes
     getline(ss, _, ',');           // state
-    getline(ss, _, ',');           // state_number
+    // getline(ss, _, ',');           // state_number
     getline(ss, sltime, ',');      // ltime
     getline(ss, _, ',');           // seq
     getline(ss, _, ',');           // dur
@@ -174,23 +172,27 @@ flow *process_csv_line(string line)
     getline(ss, _, ',');           // rate
     getline(ss, _, ',');           // srate
     getline(ss, _, ',');           // drate
+    getline(ss, _, ',');           // blank cell
     getline(ss, stbytes, ',');     // TnBPSrcIP
     getline(ss, _, ',');           // TnBPDstIP
     getline(ss, _, ',');           // TnP_PsrcIP
     getline(ss, _, ',');           // TnP_PDstIP
     getline(ss, _, ',');           // TnP_PerProto
-    getline(ss, _, ',');           // TnP_Per_Dport
-    getline(ss, _, ',');           // AR_P_Proto_P_SrcIP
-    getline(ss, _, ',');           // AR_P_Proto_P_DstIP
-    getline(ss, _, ',');           // N_IN_Conn_P_DstIP
-    getline(ss, _, ',');           // N_IN_Conn_P_SrcIP
-    getline(ss, _, ',');           // AR_P_Proto_P_Sport
-    getline(ss, _, ',');           // AR_P_Proto_P_Dport
-    getline(ss, _, ',');           // Pkts_P_State_P_Protocol_P_DestIP
-    getline(ss, _, ',');           // Pkts_P_State_P_Prrotocol_P_SrcIP
+    // getline(ss, _, ',');           // TnP_Per_Dport
+    // getline(ss, _, ',');           // AR_P_Proto_P_SrcIP
     getline(ss, sattack, ',');     // attack
     getline(ss, category, ',');    // category
     getline(ss, subcategory, ','); // subcateogry
+    // getline(ss, _, ',');           // AR_P_Proto_P_DstIP
+    // getline(ss, _, ',');           // N_IN_Conn_P_DstIP
+    // getline(ss, _, ',');           // N_IN_Conn_P_SrcIP
+    // getline(ss, _, ',');           // AR_P_Proto_P_Sport
+    // getline(ss, _, ',');           // AR_P_Proto_P_Dport
+    // getline(ss, _, ',');           // Pkts_P_State_P_Protocol_P_DestIP
+    // getline(ss, _, ',');           // Pkts_P_State_P_Prrotocol_P_SrcIP
+    // getline(ss, sattack, ',');     // attack
+    // getline(ss, category, ',');    // category
+    // getline(ss, subcategory, ','); // subcateogry
 
     stime = stold(sstime);
     ltime = stold(sltime);
