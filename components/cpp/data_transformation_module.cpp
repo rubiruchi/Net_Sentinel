@@ -55,7 +55,79 @@ int main()
     // END debug
 
     string fnames[] = {
-        "All features/UNSW_2018_IoT_Botnet_Dataset_2.csv"
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_2.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_3.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_4.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_5.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_6.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_7.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_8.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_9.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_10.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_11.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_12.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_13.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_14.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_15.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_16.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_17.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_18.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_19.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_20.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_21.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_22.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_23.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_24.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_25.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_26.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_27.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_28.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_29.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_30.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_31.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_32.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_33.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_34.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_35.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_36.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_37.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_38.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_39.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_40.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_41.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_42.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_43.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_44.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_45.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_46.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_47.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_48.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_49.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_50.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_51.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_52.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_53.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_54.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_55.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_56.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_57.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_58.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_59.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_60.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_61.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_62.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_63.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_64.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_65.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_66.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_67.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_68.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_69.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_70.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_71.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_72.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_73.csv",
+        "Entire Dataset/UNSW_2018_IoT_Botnet_Dataset_74.csv"
         };
     vector<flow *> frame;
 
@@ -198,6 +270,13 @@ flow *process_csv_line(string line)
     ltime = stold(sltime);
     tbytes = stoll(stbytes);
     attack = true ? sattack == "1" : false;
+
+    // Clean extraneous characters from strings
+    saddr = saddr.substr(1, saddr.size() - 2); 
+    proto = proto.substr(1, proto.size() - 2); 
+    category = category.substr(1, category.size() - 2); 
+    subcategory = subcategory.substr(1, subcategory.size() - 2); 
+    
 
     /* TODO: specify appropriate filters */
     if (attack && category == "DDoS" && subcategory == "TCP") // if the traffic is a TCP DDoS

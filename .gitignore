@@ -2,6 +2,7 @@
 # Ignore the dataset 
 PCAPs/
 All features/
+Entire Dataset/ 
 
 # Ignore VS Code configurations
 .vscode/
