@@ -9,6 +9,7 @@ All features/
 # Ignore images (might want to get rid of this later)
 *.png
 heat_maps/
+data/ 
 
 # Ignore Mac OS specific files
 .DS_Store
